@@ -1,0 +1,1 @@
+<RefundPaymentRequest xmlns="http://ecommerce.example.com/payment"><transactionId>TXN-REPLACE</transactionId></RefundPaymentRequest>

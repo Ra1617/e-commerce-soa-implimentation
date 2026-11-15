@@ -1,0 +1,16 @@
+server:
+  port: 8003
+spring:
+  datasource:
+    url: jdbc:h2:mem:paymentdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create
+  h2:
+    console:
+      enabled: true
+# Enable this for full SOAP request/response traces during a demo:
+# logging.level.org.springframework.ws.server.MessageTracing=TRACE

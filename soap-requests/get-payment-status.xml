@@ -1,0 +1,1 @@
+<GetPaymentStatusRequest xmlns="http://ecommerce.example.com/payment"><transactionId>TXN-REPLACE</transactionId></GetPaymentStatusRequest>

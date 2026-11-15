@@ -1,0 +1,4 @@
+package com.example.order.controller;
+import java.util.Map; import org.springframework.web.bind.annotation.GetMapping; import org.springframework.web.bind.annotation.RestController;
+/** Liveness endpoint outside the order resource path. */
+@RestController public class HealthController { @GetMapping("/health") public Map<String,String> health(){return Map.of("service","order","status","UP");} }

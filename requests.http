@@ -1,0 +1,26 @@
+### Product list
+GET http://localhost:8001/products
+
+### Reserve two mice
+POST http://localhost:8001/products/1/reserve
+Content-Type: application/json
+
+{"quantity":2}
+
+### Place order (201 and CONFIRMED when all services are running)
+POST http://localhost:8000/orders
+Content-Type: application/json
+
+{"customerName":"Asha","items":[{"productId":1,"quantity":2},{"productId":4,"quantity":1}],"payment":{"method":"CARD","cardNumber":"4111111111111111"}}
+
+### Declined order (402 and PAYMENT_FAILED; stock is restored)
+POST http://localhost:8000/orders
+Content-Type: application/json
+
+{"customerName":"Asha","items":[{"productId":1,"quantity":1}],"payment":{"method":"CARD","cardNumber":"4111111111110000"}}
+
+### Product not found (404)
+GET http://localhost:8001/products/999
+
+### Payment health
+GET http://localhost:8003/health

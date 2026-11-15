@@ -1,0 +1,1 @@
+<ProcessPaymentRequest xmlns="http://ecommerce.example.com/payment"><orderId>ORD-DEMO123</orderId><amount>2897.00</amount><method>CARD</method><cardNumber>4111111111111111</cardNumber></ProcessPaymentRequest>
