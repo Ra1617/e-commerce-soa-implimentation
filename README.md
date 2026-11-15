@@ -24,6 +24,8 @@ curl -X POST http://localhost:8000/orders -H "Content-Type: application/json" -d
 
 Expected HTTP `201` with an order whose status is `CONFIRMED`, a generated `ORD-XXXXXXXX`, and a `TXN-XXXXXXXXXX`; the card number is never returned.
 
+The seeded `Laptop Stand` is product `5` with zero stock. Ordering it returns HTTP `409`; if earlier lines were reserved in the same request, the order service releases those reservations as compensation. Invalid card input returns HTTP `400` with a short validation message and never echoes the card number.
+
 SOAP examples use `soap-requests/*.xml`, for example:
 `curl -H "Content-Type: text/xml; charset=utf-8" --data-binary "@soap-requests/process-payment-approved.xml" http://localhost:8003/ws`
 

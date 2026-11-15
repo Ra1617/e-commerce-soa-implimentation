@@ -27,7 +27,7 @@ class ProductControllerMockMvcTest {
     void listsSeededProducts() throws Exception {
         mvc.perform(get("/products"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(4)))
+                .andExpect(jsonPath("$", hasSize(5)))
                 .andExpect(jsonPath("$[0].name", is("Mouse")));
     }
 
@@ -46,9 +46,19 @@ class ProductControllerMockMvcTest {
         mvc.perform(post("/products/1/reserve").contentType(MediaType.APPLICATION_JSON)
                         .content("{\"quantity\":0}"))
                 .andExpect(status().isBadRequest());
+        repository.findById(1L).ifPresent(p -> { p.setStock(1); repository.save(p); });
         mvc.perform(post("/products/1/reserve").contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"quantity\":101}"))
+                        .content("{\"quantity\":2}"))
                 .andExpect(status().isConflict());
+    }
+
+    @Test
+    void returnsStructuredValidationError() throws Exception {
+        mvc.perform(post("/products/1/reserve").contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"quantity\":0}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is(400)))
+                .andExpect(jsonPath("$.message", containsString("quantity")));
     }
 
     @Test

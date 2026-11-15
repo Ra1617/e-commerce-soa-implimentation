@@ -1,7 +1,10 @@
 package com.example.order.exception;
-import jakarta.servlet.http.HttpServletRequest; import java.time.Instant; import java.util.Map; import org.springframework.web.bind.annotation.*; import org.springframework.http.ResponseEntity;
+import jakarta.servlet.http.HttpServletRequest; import jakarta.validation.ConstraintViolationException; import java.time.Instant; import java.util.Map; import java.util.stream.Collectors; import org.springframework.web.bind.MethodArgumentNotValidException; import org.springframework.web.bind.annotation.*; import org.springframework.http.*;
 /** Consistent error envelope for REST clients. */
 @RestControllerAdvice public class ErrorHandler {
  @ExceptionHandler(ApiException.class) public ResponseEntity<Map<String,Object>> api(ApiException e,HttpServletRequest r){return ResponseEntity.status(e.getStatus()).body(Map.of("timestamp",Instant.now(),"status",e.getStatus(),"error",e.getStatus()==404?"Not Found":e.getStatus()==409?"Conflict":"Service Error","message",e.getMessage(),"path",r.getRequestURI()));}
- @ExceptionHandler(Exception.class) public ResponseEntity<Map<String,Object>> other(Exception e,HttpServletRequest r){return ResponseEntity.status(500).body(Map.of("timestamp",Instant.now(),"status",500,"error","Internal Server Error","message",e.getMessage(),"path",r.getRequestURI()));}
+ @ExceptionHandler(MethodArgumentNotValidException.class) public ResponseEntity<Map<String,Object>> invalid(MethodArgumentNotValidException e,HttpServletRequest r){String message=e.getBindingResult().getFieldErrors().stream().map(error->error.getField()+": "+error.getDefaultMessage()).collect(Collectors.joining(", "));return error(HttpStatus.BAD_REQUEST,message,r);}
+ @ExceptionHandler(ConstraintViolationException.class) public ResponseEntity<Map<String,Object>> invalid(ConstraintViolationException e,HttpServletRequest r){String message=e.getConstraintViolations().stream().map(v->v.getPropertyPath()+": "+v.getMessage()).collect(Collectors.joining(", "));return error(HttpStatus.BAD_REQUEST,message,r);}
+ @ExceptionHandler(Exception.class) public ResponseEntity<Map<String,Object>> other(Exception e,HttpServletRequest r){return error(HttpStatus.INTERNAL_SERVER_ERROR,"Internal server error",r);}
+ private ResponseEntity<Map<String,Object>> error(HttpStatus status,String message,HttpServletRequest r){return ResponseEntity.status(status).body(Map.of("timestamp",Instant.now(),"status",status.value(),"error",status.getReasonPhrase(),"message",message,"path",r.getRequestURI()));}
 }

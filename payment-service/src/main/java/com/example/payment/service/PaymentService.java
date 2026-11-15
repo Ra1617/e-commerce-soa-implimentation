@@ -7,10 +7,13 @@ import java.math.BigDecimal;
 import java.security.SecureRandom;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** Implements payment business rules behind the SOAP endpoint. */
 @Service
 public class PaymentService {
+  private static final Logger log = LoggerFactory.getLogger(PaymentService.class);
   private final PaymentTransactionRepository repository;
   private final SecureRandom random = new SecureRandom();
   public PaymentService(PaymentTransactionRepository repository){this.repository=repository;}
@@ -21,6 +24,7 @@ public class PaymentService {
     String id="TXN-"+suffix;
     String status=card.endsWith("0000")?"DECLINED":"APPROVED";
     PaymentTransaction tx=new PaymentTransaction(id,orderId,amount,method,card.substring(12),status); repository.save(tx);
+    log.info("[PAYMENT] ProcessPayment received orderId={} card=****{} -> {}", orderId, card.substring(12), status);
     return tx;
   }
   @Transactional(readOnly=true) public PaymentTransaction get(String id){return repository.findById(id).orElseThrow(()->new PaymentFaultException("Unknown transactionId '"+id+"'"));}

@@ -16,7 +16,8 @@ public class DataInitializer {
                     new Product(null, "Mouse", "Wireless optical mouse", new BigDecimal("29.99"), 100),
                     new Product(null, "Keyboard", "Mechanical keyboard", new BigDecimal("79.99"), 50),
                     new Product(null, "Monitor", "27-inch 4K monitor", new BigDecimal("299.99"), 20),
-                    new Product(null, "USB-C Hub", "Multi-port USB-C hub", new BigDecimal("39.99"), 75)
+                    new Product(null, "USB-C Hub", "Multi-port USB-C hub", new BigDecimal("39.99"), 75),
+                    new Product(null, "Laptop Stand", "Adjustable laptop stand", new BigDecimal("49.99"), 0)
                 ));
             }
         };
